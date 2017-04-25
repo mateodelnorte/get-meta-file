@@ -1,2 +1,2 @@
-# meta-get-meta-file
-get-meta-file plugin for meta
+# get-meta-file
+loads a meta file in module.exports or json format from the current cwd
