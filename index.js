@@ -2,7 +2,8 @@ const debug = require('debug')('get-meta-file');
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function () {
+module.exports = function (options) {
+  options = options || { warn: true };
 
   var meta = null; 
   let buffer = null;
@@ -36,7 +37,7 @@ module.exports = function () {
     }
   }
 
-  if ( ! meta) return console.error(`No .meta file found in ${process.cwd()}. Are you in a meta repo?`);
+  if ( ! meta && options.warn) return console.error(`No .meta file found in ${process.cwd()}. Are you in a meta repo?`);
 
   return meta;
 
