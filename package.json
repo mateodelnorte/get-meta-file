@@ -1,0 +1,30 @@
+{
+  "name": "get-meta-file",
+  "version": "0.0.0",
+  "description": "gets a meta file and its contents",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mateodelnorte/get-meta-file.git"
+  },
+  "keywords": [
+    "get-meta-file",
+    "meta",
+    "repo",
+    "repository",
+    "metarepository",
+    "metarepo"
+  ],
+  "author": "github@iammattwalters.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mateodelnorte/meta/issues"
+  },
+  "homepage": "https://github.com/mateodelnorte/get-meta-file#readme",
+  "dependencies": {
+    "debug": "^2.3.3"
+  }
+}
