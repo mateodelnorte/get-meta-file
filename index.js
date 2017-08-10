@@ -1,6 +1,8 @@
 const debug = require('debug')('get-meta-file');
+const findUpsync = require('find-up-sync');
 const fs = require('fs');
 const path = require('path');
+const util = require('util');
 
 module.exports = function (options) {
   options = options || { warn: true };
@@ -8,7 +10,7 @@ module.exports = function (options) {
   var meta = null; 
   let buffer = null;
 
-  const metaLocation = path.join(process.cwd(), '.meta');
+  const metaLocation = findUpsync('.meta', { cwd: process.cwd() });
 
   try {
     debug(`attempting to load .meta file with module.exports format at ${metaLocation}`);
@@ -42,3 +44,7 @@ module.exports = function (options) {
   return meta;
 
 };
+
+module.exports.getFileLocation = function () {
+  return findUpsync('.meta', { cwd: process.cwd() });
+}
