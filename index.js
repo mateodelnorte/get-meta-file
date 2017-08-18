@@ -1,7 +1,9 @@
+const chalk = require('chalk');
 const debug = require('debug')('get-meta-file');
-const findUpsync = require('find-up-sync');
+const findUpsync = require('findup-sync');
 const fs = require('fs');
 const path = require('path');
+const prompt = require('prompt-sync')();
 const util = require('util');
 
 module.exports = function (options) {
@@ -10,7 +12,35 @@ module.exports = function (options) {
   var meta = null; 
   let buffer = null;
 
-  const metaLocation = findUpsync('.meta', { cwd: process.cwd() });
+  const metaLocation = 
+    fs.existsSync(path.join(process.cwd(), '.meta'))
+      ? path.join(process.cwd(), '.meta')
+      : findUpsync('.meta', { cwd: process.cwd() });
+
+  if (options.confirmInMetaRepo) {
+
+    const warning = chalk.red('\nYou are not currently in a meta repo!\n');
+
+    if ( ! metaLocation) {
+      console.log(warning);
+      process.exit(1);
+    }
+    
+    if (path.dirname(metaLocation) !== process.cwd()) {
+      
+      const question = `We found a meta repo in ${metaLocation}. Would you like to...\n\n\trun the command from ${metaLocation} (y or enter)\n\tcontinue in the current directory (c)\n\tcancel and exit (x) ?\n\n\t(Y/c/x)`;
+      const message = `${warning}\n${question}`;
+      
+      const yes = prompt(message).toLowerCase();
+
+      if (yes === 'x') return process.exit(0);
+      if ( ! yes || yes === 'y') {
+        process.chdir(path.dirname(metaLocation));
+      }
+
+    }
+
+  }
 
   try {
     debug(`attempting to load .meta file with module.exports format at ${metaLocation}`);

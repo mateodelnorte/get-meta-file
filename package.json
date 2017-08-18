@@ -1,6 +1,6 @@
 {
   "name": "get-meta-file",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "gets a meta file and its contents",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,9 @@
   },
   "homepage": "https://github.com/mateodelnorte/get-meta-file#readme",
   "dependencies": {
+    "chalk": "^2.1.0",
     "debug": "^2.3.3",
-    "find-up-sync": "^1.0.2"
+    "inquirer": "^3.2.2",
+    "prompt-sync": "^4.1.5"
   }
 }
