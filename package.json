@@ -1,6 +1,6 @@
 {
   "name": "get-meta-file",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "gets a meta file and its contents",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,7 @@
   "dependencies": {
     "chalk": "^2.1.0",
     "debug": "^2.3.3",
+    "findup-sync": "^2.0.0",
     "inquirer": "^3.2.2",
     "prompt-sync": "^4.1.5"
   }

@@ -9,10 +9,10 @@ const util = require('util');
 module.exports = function (options) {
   options = options || { warn: true };
 
-  var meta = null; 
+  var meta = null;
   let buffer = null;
 
-  const metaLocation = 
+  const metaLocation =
     fs.existsSync(path.join(process.cwd(), '.meta'))
       ? path.join(process.cwd(), '.meta')
       : findUpsync('.meta', { cwd: process.cwd() });
@@ -25,12 +25,12 @@ module.exports = function (options) {
       console.log(warning);
       process.exit(1);
     }
-    
+
     if (path.dirname(metaLocation) !== process.cwd()) {
-      
+
       const question = `We found a meta repo in ${metaLocation}. Would you like to...\n\n\trun the command from ${metaLocation} (y or enter)\n\tcontinue in the current directory (c)\n\tcancel and exit (x) ?\n\n\t(Y/c/x)`;
       const message = `${warning}\n${question}`;
-      
+
       const yes = prompt(message).toLowerCase();
 
       if (yes === 'x') return process.exit(0);
