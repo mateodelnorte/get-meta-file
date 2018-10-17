@@ -8,6 +8,7 @@ const util = require('util');
 
 module.exports = function (options) {
   options = options || { warn: true };
+  let confirmInMetaRepo = options.confirmInMetaRepo;
 
   var meta = null;
   let buffer = null;
@@ -17,29 +18,11 @@ module.exports = function (options) {
       ? path.join(process.cwd(), '.meta')
       : findUpsync('.meta', { cwd: process.cwd() });
 
-  if (options.confirmInMetaRepo) {
+  const warning = chalk.red('\nYou are not currently in a meta repo!\n');
 
-    const warning = chalk.red('\nYou are not currently in a meta repo!\n');
-
-    if ( ! metaLocation) {
-      console.log(warning);
-      process.exit(1);
-    }
-
-    if (path.dirname(metaLocation) !== process.cwd()) {
-
-      const question = `We found a meta repo in ${metaLocation}. Would you like to...\n\n\trun the command from ${metaLocation} (y or enter)\n\tcontinue in the current directory (c)\n\tcancel and exit (x) ?\n\n\t(Y/c/x)`;
-      const message = `${warning}\n${question}`;
-
-      const yes = prompt(message).toLowerCase();
-
-      if (yes === 'x') return process.exit(0);
-      if ( ! yes || yes === 'y') {
-        process.chdir(path.dirname(metaLocation));
-      }
-
-    }
-
+  if (!metaLocation) {
+    console.log(warning);
+    process.exit(1);
   }
 
   try {
@@ -49,8 +32,6 @@ module.exports = function (options) {
   } catch (e) {
     debug(`no module.exports format .meta file found at ${metaLocation}: ${e}`);
   }
-
-  if (meta) return meta;
 
   try {
     debug(`attempting to load .meta file with json format at ${metaLocation}`);
@@ -69,10 +50,36 @@ module.exports = function (options) {
     }
   }
 
-  if ( ! meta && options.warn) return console.error(`No .meta file found in ${process.cwd()}. Are you in a meta repo?`);
+  if (!meta && options.warn) return console.error(`No .meta file found in ${process.cwd()}. Are you in a meta repo?`);
+
+  if (confirmInMetaRepo) {
+    debug(`confirmInMetaRepo ${confirmInMetaRepo} meta ${JSON.stringify(meta)}`)
+    confirmInMetaRepo = confirmInMetaRepo && !(meta['options'] && meta['options']['useParentMeta']);
+    debug(`confirmInMetaRepo ${confirmInMetaRepo}`)
+  }
+
+  if (path.dirname(metaLocation) !== process.cwd()) {
+
+    if (confirmInMetaRepo) {
+
+      const question = `We found a meta repo in ${metaLocation}. Would you like to...\n\n\trun the command from ${metaLocation} (y or enter)\n\tcancel and exit (x) ?\n\n\t(y/x)`;
+      const message = `${warning}\n${question}`;
+
+      const yes = prompt(message).toLowerCase();
+
+      if (yes === 'x') return process.exit(0);
+      if ( ! yes || yes.toLowerCase() === 'y') {
+        process.chdir(path.dirname(metaLocation));
+      }
+
+    }
+    else {
+      process.chdir(path.dirname(metaLocation));
+    }
+
+  }
 
   return meta;
-
 };
 
 module.exports.getFileLocation = function () {
