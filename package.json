@@ -26,9 +26,9 @@
   "homepage": "https://github.com/mateodelnorte/get-meta-file#readme",
   "dependencies": {
     "chalk": "^2.1.0",
-    "debug": "^2.3.3",
+    "debug": "^4.1.0",
     "findup-sync": "^2.0.0",
-    "inquirer": "^3.2.2",
+    "inquirer": "^6.2.1",
     "prompt-sync": "^4.1.5"
   }
 }
