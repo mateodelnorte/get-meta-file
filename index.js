@@ -37,9 +37,7 @@ module.exports = function(options) {
   }
 
   try {
-    debug(
-      `attempting to load .meta file with module.exports format at ${metaLocation}`
-    );
+    debug(`attempting to load .meta file with module.exports format at ${metaLocation}`); // prettier-ignore
     meta = require(metaLocation);
     debug(`.meta file found at ${metaLocation}`);
   } catch (e) {
@@ -59,18 +57,14 @@ module.exports = function(options) {
   if (buffer) {
     try {
       meta = JSON.parse(buffer.toString());
-      debug(
-        `.meta file contents parsed: ${util.inspect(meta, null, Infinity)}`
-      );
+      debug(`.meta file contents parsed: ${util.inspect(meta, null, Infinity)}`); // prettier-ignore
     } catch (e) {
       debug(`error parsing .meta JSON: ${e}`);
     }
   }
 
   if (!meta && options.warn)
-    return console.error(
-      `No .meta file found in ${process.cwd()}. Are you in a meta repo?`
-    );
+    return console.error(`No .meta file found in ${process.cwd()}. Are you in a meta repo?`); // prettier-ignore
 
   return meta;
 };
