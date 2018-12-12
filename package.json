@@ -6,6 +6,11 @@
   "scripts": {
     "test": "npm test"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/mateodelnorte/get-meta-file.git"
@@ -30,5 +35,10 @@
     "findup-sync": "^2.0.0",
     "inquirer": "^3.2.2",
     "prompt-sync": "^4.1.5"
+  },
+  "devDependencies": {
+    "husky": "^1.2.0",
+    "prettier": "^1.15.3",
+    "pretty-quick": "^1.8.0"
   }
 }
