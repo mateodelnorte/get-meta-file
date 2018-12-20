@@ -4,7 +4,7 @@
   "description": "gets a meta file and its contents",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "echo 'No tests'"
   },
   "husky": {
     "hooks": {
