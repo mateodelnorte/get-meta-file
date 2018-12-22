@@ -1,72 +1,90 @@
-const chalk = require('chalk');
+const { gray, green, yellow, underline } = require('chalk');
 const debug = require('debug')('get-meta-file');
+const dedent = require('dedent');
 const findUpsync = require('findup-sync');
 const fs = require('fs');
 const path = require('path');
 const prompt = require('prompt-sync')();
+const tildify = require('tildify');
 const util = require('util');
 
-module.exports = function(options) {
-  options = options || { warn: true };
+const CWD_NOT_META =
+  yellow('warn: ') +
+  'The current directory is' +
+  underline(' not ') +
+  'a meta repo';
 
-  var meta = null;
+const warnMissing = cwd => dedent`
+  ${CWD_NOT_META}:
+    ${gray(tildify(cwd))}
+
+  And none of your ancestors are meta repos, either.
+`;
+
+module.exports = function(options = {}) {
+  options.warn = options.warn !== false;
+
+  const cwd = process.cwd();
+  const inMetaRepo = fs.existsSync('.meta');
+  const metaPath = inMetaRepo
+    ? path.resolve('.meta')
+    : findUpsync('.meta', { cwd });
+
+  if (!metaPath) {
+    if (options.warn) console.warn(warnMissing(cwd));
+    return null;
+  }
+
+  if (options.confirmInMetaRepo && !inMetaRepo) {
+    console.log(dedent`
+      ${CWD_NOT_META}:
+        ${gray(tildify(cwd))}
+
+      The closest meta repo is:
+        ${gray(tildify(metaPath))}
+
+      Would you like to:
+        - continue in the closest meta repo? ${green('[y/enter]')}
+        - continue in the current directory? ${green('[c]')}
+        - cancel and exit? ${green('[x]')}
+
+    `);
+
+    const answer = prompt(message).toLowerCase() || 'y';
+    answer === 'x' && process.exit(0);
+    answer === 'y' && process.chdir(path.dirname(metaPath));
+  }
+
+  try {
+    debug(`attempting to load .meta file with module.exports format at ${metaPath}`); // prettier-ignore
+    const meta = require(metaPath);
+    debug(`.meta file found at ${metaPath}`);
+    if (meta) return meta;
+  } catch (e) {
+    debug(`no module.exports format .meta file found at ${metaPath}: ${e}`);
+  }
+
   let buffer = null;
-
-  const metaLocation = fs.existsSync(path.join(process.cwd(), '.meta'))
-    ? path.join(process.cwd(), '.meta')
-    : findUpsync('.meta', { cwd: process.cwd() });
-
-  if (options.confirmInMetaRepo) {
-    const warning = chalk.red('\nYou are not currently in a meta repo!\n');
-
-    if (!metaLocation) {
-      console.log(warning);
-      process.exit(1);
-    }
-
-    if (path.dirname(metaLocation) !== process.cwd()) {
-      const question = `We found a meta repo in ${metaLocation}. Would you like to...\n\n\trun the command from ${metaLocation} (y or enter)\n\tcontinue in the current directory (c)\n\tcancel and exit (x) ?\n\n\t(Y/c/x)`;
-      const message = `${warning}\n${question}`;
-
-      const yes = prompt(message).toLowerCase();
-      if (yes === 'x') return process.exit(0);
-      if (!yes || yes === 'y') {
-        process.chdir(path.dirname(metaLocation));
-      }
-    }
-  }
-
   try {
-    debug(`attempting to load .meta file with module.exports format at ${metaLocation}`); // prettier-ignore
-    meta = require(metaLocation);
-    debug(`.meta file found at ${metaLocation}`);
+    debug(`attempting to load .meta file with json format at ${metaPath}`);
+    buffer = fs.readFileSync(metaPath);
+    debug(`.meta file found at ${metaPath}`);
   } catch (e) {
-    debug(`no module.exports format .meta file found at ${metaLocation}: ${e}`);
-  }
-
-  if (meta) return meta;
-
-  try {
-    debug(`attempting to load .meta file with json format at ${metaLocation}`);
-    buffer = fs.readFileSync(metaLocation);
-    debug(`.meta file found at ${metaLocation}`);
-  } catch (e) {
-    debug(`no .meta file found at ${metaLocation}: ${e}`);
+    debug(`no .meta file found at ${metaPath}: ${e}`);
   }
 
   if (buffer) {
     try {
-      meta = JSON.parse(buffer.toString());
+      const meta = JSON.parse(buffer.toString());
       debug(`.meta file contents parsed: ${util.inspect(meta, null, Infinity)}`); // prettier-ignore
+      return meta;
     } catch (e) {
       debug(`error parsing .meta JSON: ${e}`);
     }
   }
 
-  if (!meta && options.warn)
-    return console.error(`No .meta file found in ${process.cwd()}. Are you in a meta repo?`); // prettier-ignore
-
-  return meta;
+  if (options.warn) console.warn(warnMissing(cwd));
+  return null;
 };
 
 module.exports.getFileLocation = function() {
