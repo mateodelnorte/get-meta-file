@@ -10,9 +10,9 @@ const util = require('util');
 
 const CWD_NOT_META =
   yellow('warn: ') +
-  'The current directory is' +
-  underline(' not ') +
-  'a meta repo';
+  'The current directory is ' +
+  underline('not') +
+  ' a meta repo';
 
 const warnMissing = cwd => dedent`
   ${CWD_NOT_META}:
