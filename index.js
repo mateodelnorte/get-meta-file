@@ -50,7 +50,7 @@ module.exports = function(options = {}) {
 
     `);
 
-    const answer = prompt().toLowerCase() || 'y';
+    const answer = (prompt() || 'y').toLowerCase();
     answer === 'x' && process.exit(0);
     answer === 'y' && process.chdir(path.dirname(metaPath));
   }
