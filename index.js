@@ -50,7 +50,7 @@ module.exports = function(options = {}) {
 
     `);
 
-    const answer = prompt(message).toLowerCase() || 'y';
+    const answer = prompt('').toLowerCase() || 'y';
     answer === 'x' && process.exit(0);
     answer === 'y' && process.chdir(path.dirname(metaPath));
   }
@@ -84,6 +84,7 @@ module.exports = function(options = {}) {
   }
 
   if (options.warn) console.warn(warnMissing(cwd));
+
   return null;
 };
 
