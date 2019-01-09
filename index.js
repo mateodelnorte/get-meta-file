@@ -10,9 +10,9 @@ const util = require('util');
 
 const CWD_NOT_META =
   yellow('warn: ') +
-  'The current directory is' +
-  underline(' not ') +
-  'a meta repo';
+  'The current directory is ' +
+  underline('not') +
+  ' a meta repo';
 
 const warnMissing = cwd => dedent`
   ${CWD_NOT_META}:
@@ -50,7 +50,7 @@ module.exports = function(options = {}) {
 
     `);
 
-    const answer = prompt(message).toLowerCase() || 'y';
+    const answer = (prompt() || 'y').toLowerCase();
     answer === 'x' && process.exit(0);
     answer === 'y' && process.chdir(path.dirname(metaPath));
   }
