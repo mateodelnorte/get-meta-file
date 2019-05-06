@@ -93,3 +93,11 @@ module.exports = function(options = {}) {
 module.exports.getFileLocation = function() {
   return findUpsync('.meta', { cwd: process.cwd() });
 };
+
+module.exports.format = function(meta) {
+  return JSON.stringify(meta, null, 2) + '\n';
+};
+
+module.exports.save = function(meta) {
+  fs.writeFileSync(module.exports.getFileLocation(), module.exports.format(meta));
+};
