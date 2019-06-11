@@ -8,11 +8,7 @@ const prompt = require('prompt-sync')();
 const tildify = require('tildify');
 const util = require('util');
 
-const CWD_NOT_META =
-  yellow('warn: ') +
-  'The current directory is ' +
-  underline('not') +
-  ' a meta repo';
+const CWD_NOT_META = yellow('warn: ') + 'The current directory is ' + underline('not') + ' a meta repo';
 
 const warnMissing = cwd => dedent`
   ${CWD_NOT_META}:
@@ -26,9 +22,7 @@ module.exports = function(options = {}) {
 
   const cwd = process.cwd();
   const inMetaRepo = fs.existsSync('.meta');
-  const metaPath = inMetaRepo
-    ? path.resolve('.meta')
-    : findUpsync('.meta', { cwd });
+  const metaPath = inMetaRepo ? path.resolve('.meta') : findUpsync('.meta', { cwd });
 
   if (!metaPath) {
     if (options.warn) console.warn(warnMissing(cwd));
