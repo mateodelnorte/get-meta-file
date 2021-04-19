@@ -10,14 +10,14 @@ const util = require('util');
 
 const CWD_NOT_META = yellow('warn: ') + 'The current directory is ' + underline('not') + ' a meta repo';
 
-const warnMissing = cwd => dedent`
+const warnMissing = (cwd) => dedent`
   ${CWD_NOT_META}:
     ${gray(tildify(cwd))}
 
   And none of your ancestors are meta repos, either.
 `;
 
-module.exports = function(options = {}) {
+module.exports = function (options = {}) {
   options.warn = options.warn !== false;
 
   const cwd = process.cwd();
@@ -84,14 +84,14 @@ module.exports = function(options = {}) {
   return null;
 };
 
-module.exports.getFileLocation = function() {
+module.exports.getFileLocation = function () {
   return findUpsync('.meta', { cwd: process.cwd() });
 };
 
-module.exports.format = function(meta) {
+module.exports.format = function (meta) {
   return JSON.stringify(meta, null, 2) + '\n';
 };
 
-module.exports.save = function(meta) {
+module.exports.save = function (meta) {
   fs.writeFileSync(module.exports.getFileLocation(), module.exports.format(meta));
 };
