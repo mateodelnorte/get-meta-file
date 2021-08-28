@@ -34,7 +34,7 @@
     "dedent": "^0.7.0",
     "findup-sync": "^4.0.0",
     "prompt-sync": "^4.2.0",
-    "tildify": "^2.0.0"
+    "tildify": "^3.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "12.1.4",
