@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/mateodelnorte/get-meta-file#readme",
   "dependencies": {
-    "chalk": "^3.0.0",
+    "chalk": "^5.0.0",
     "debug": "^4.3.2",
     "dedent": "^0.7.0",
     "findup-sync": "^4.0.0",
